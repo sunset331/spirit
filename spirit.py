@@ -98,8 +98,7 @@ def apply_diff(project_root: str, diff_text: str) -> bool:
     try:
         result = subprocess.run(
             ["git", "apply", "--reject", str(tmp)],
-            cwd=project_root, capture_output=True, text=True, timeout=10,
-        )
+            cwd=project_root, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10,        )
         tmp.unlink(missing_ok=True)
         if result.returncode != 0:
             print(f"  ⚠️  patch 应用警告:\n{result.stderr[:300]}")

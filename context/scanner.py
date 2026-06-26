@@ -48,7 +48,8 @@ class ContextScanner:
         try:
             result = subprocess.run(
                 cmd, cwd=str(self.root), capture_output=True,
-                text=True, timeout=timeout, shell=False,
+                timeout=timeout, shell=False,
+                encoding="utf-8", errors="replace",
             )
             return result.stdout.strip() or "(empty)"
         except Exception:
@@ -70,8 +71,7 @@ class ContextScanner:
         try:
             result = subprocess.run(
                 ["tree", "-L", "3", "-I", "|".join(exclude), "--dirsfirst"],
-                cwd=str(self.root), capture_output=True, text=True, timeout=15,
-            )
+                cwd=str(self.root), capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=15,            )
             return result.stdout.strip() or "(tree not available)"
         except FileNotFoundError:
             # Windows 可能没有 tree 命令，fallback 到 dir

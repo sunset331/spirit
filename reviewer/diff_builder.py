@@ -29,8 +29,7 @@ class DiffBuilder:
         try:
             r = subprocess.run(
                 ["git", "diff", ref], cwd=str(self.root),
-                capture_output=True, text=True, timeout=10,
-            )
+                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10,            )
             out = r.stdout.strip()
             # 截断过大的 diff
             if len(out) > 15000:
@@ -43,8 +42,7 @@ class DiffBuilder:
         try:
             r = subprocess.run(
                 ["git", "diff", "--stat", ref], cwd=str(self.root),
-                capture_output=True, text=True, timeout=10,
-            )
+                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10,            )
             return r.stdout.strip() or "(empty)"
         except Exception:
             return "(failed)"

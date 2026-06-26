@@ -70,8 +70,7 @@ class CheckpointManager:
         try:
             r = subprocess.run(
                 cmd, cwd=str(self.root), capture_output=True,
-                text=True, timeout=10,
-            )
+                text=True, encoding="utf-8", errors="replace", timeout=10,            )
             return r.stdout.strip()
         except Exception:
             return ""

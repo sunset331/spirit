@@ -52,8 +52,7 @@ class Verifier:
         try:
             result = subprocess.run(
                 cmd, cwd=self.root, capture_output=True,
-                text=True, timeout=60, shell=True,
-            )
+                text=True, encoding="utf-8", errors="replace", timeout=60, shell=True,            )
             output = (result.stdout + result.stderr).strip()
             if not output:
                 output = "(no output)"
