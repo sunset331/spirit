@@ -30,7 +30,7 @@ from planner import (
 )
 from executor import DeepSeekExecutor, CheckpointManager
 from verifier import Verifier
-from reviewer import DiffBuilder, Reviewer
+from reviewer import DiffBuilder
 
 
 # ─── 配置加载 ─────────────────────────────────────────────────
@@ -98,14 +98,20 @@ def apply_diff(project_root: str, diff_text: str) -> bool:
     try:
         result = subprocess.run(
             ["git", "apply", "--reject", str(tmp)],
-            cwd=project_root, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10,        )
+            cwd=project_root, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10,
+        )
         tmp.unlink(missing_ok=True)
         if result.returncode != 0:
             print(f"  ⚠️  patch 应用警告:\n{result.stderr[:300]}")
             return False
         return True
-    except Exception as e:
-        print(f"  ❌ patch 失败: {e}")
+    except subprocess.TimeoutExpired:
+        print(f"  ❌ patch 应用超时 (10s)")
+        tmp.unlink(missing_ok=True)
+        return False
+    except subprocess.CalledProcessError as e:
+        print(f"  ❌ patch 应用失败: {e}")
+        tmp.unlink(missing_ok=True)
         return False
 
 

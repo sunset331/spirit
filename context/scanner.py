@@ -3,7 +3,7 @@
 import subprocess
 import os
 from pathlib import Path
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 
 
 @dataclass
