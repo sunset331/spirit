@@ -1,0 +1,45 @@
+# Spirit (灵枢) 配置文件
+# 注意: API keys 不要写在这里，通过环境变量或 .claude/settings.local.json 引用
+
+spirit:
+  name: "Spirit"
+  version: "0.1.0"
+
+projects:
+  # 当前项目（通过 CLI --project 覆盖）
+  default: "onescience"
+  roots:
+    onescience: "F:/projects/onescience-models"
+    music-player: "F:/projects/music-player"
+    rag: "F:/projects/my_own_agentic_RAG"
+
+deepseek:
+  api_base: "https://api.deepseek.com"
+  api_key_env: "DEEPSEEK_API_KEY"
+  model: "deepseek-chat"
+  # 不同阶段的 effort 级别
+  planner_effort: "xhigh"
+  executor_effort: "high"
+
+gpt:
+  # v1.0: manual copy-paste adapter（默认）
+  adapter: "manual"
+  # v1.5: Playwright adapter
+  # adapter: "playwright"
+  # chrome_debug_port: 9222
+
+executor:
+  max_fix_attempts: 2       # 每步最多自动修复次数
+  max_gpt_calls_per_run: 3  # 每次运行最多调 GPT 次数
+  diff_threshold: 50        # diff 超过此行数 → 触发 Checkpoint Review
+
+verifier:
+  auto_run: true            # 每步执行后自动跑验证
+  commands:
+    - "ruff check --select=E,F --diff"
+    - "pytest -x --tb=short 2>/dev/null || echo 'no tests found'"
+
+git:
+  auto_commit: true         # 每步自动 git commit
+  auto_branch: true         # 复杂任务自动创建分支
+  branch_prefix: "spirit/"
